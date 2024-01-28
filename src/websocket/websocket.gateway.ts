@@ -8,7 +8,7 @@ import {
 import { Socket } from 'socket.io';
 
 @WebSocketGateway()
-export class AppGateway implements OnGatewayInit {
+export class WebsocketGateway implements OnGatewayInit {
   private logger: Logger = new Logger(' Socketalistasiti');
   afterInit(server: any) {
     this.logger.log('inaliziazed');
@@ -20,8 +20,8 @@ export class AppGateway implements OnGatewayInit {
       client.id,
     );
   }
-  handleConnection(client:Socket, ...args:any[]) {
-    this.logger.log('client connected' , client.id)
+  handleConnection(client: Socket, ...args: any[]) {
+    this.logger.log('client connected', client.id);
   }
 
   @SubscribeMessage('message')
