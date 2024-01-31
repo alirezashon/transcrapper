@@ -22,11 +22,13 @@ export class WebsocketGateway implements OnGatewayInit {
   }
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log('client connected', client.id);
+    console.log(client)
   }
 
   @SubscribeMessage('message')
   handleMessage(client: Socket, text: string): WsResponse<string> {
-    // client.emit('message', text)
+       this.logger.log('client connected', text);
+ // client.emit('message', text)
     return { event: `msg to client is `, data: text };
   }
 }
