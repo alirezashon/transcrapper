@@ -15,7 +15,7 @@ export class ScrappingController {
       const { authType, text } = req.body;
          if (authType === '*P&2%E!') {
           if (text && typeof (text === String)) {
-              const consequentText = await this.scrapper.transcrapper(text);
+              const consequentText = await this.scrapper.transcrapper();
               console.log (consequentText)
             res
               .status(200)
