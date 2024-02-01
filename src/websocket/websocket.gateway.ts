@@ -1,37 +1,63 @@
-import { Logger } from '@nestjs/common';
-import {
-  OnGatewayInit,
-  SubscribeMessage,
-  WebSocketGateway,
-  WsResponse,
-} from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+  import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+  import { Server } from 'socket.io';
+  import { ScrappingService } from '../scrapping/scrapping.service';
+  @WebSocketGateway()
+  export class ScrappingGateway {
+    @WebSocketServer()
+    server: Server;
 
-@WebSocketGateway()
-export class WebsocketGateway implements OnGatewayInit {
-  private logger: Logger = new Logger(' Socketalistasiti');
-  afterInit(server: any) {
-    this.logger.log('inaliziazed');
-  }
+    @SubscribeMessage('translateText')
+    async handleTranslateText(@MessageBody() text: string): Promise<void> {
+      console.log(text)
+      const result = await this.scrappingService.transcrapper(text);
+      this.server.emit('translationResult', result);
+    }
 
-  handleDisconnect(client: Socket) {
-    this.logger.log(
-      'web socket gheyre connect mibashad lotgfan ba osdoem admin tamas hasel farmaiid',
-      client.id,
-    );
-  }
-  handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log('client connected', client.id);
-    console.log(client)
+    constructor(private readonly scrappingService: ScrappingService) {}
   }
 
-  @SubscribeMessage('message')
-  handleMessage(client: Socket, text: string): WsResponse<string> {
-       this.logger.log('client connected', text);
- // client.emit('message', text)
-    return { event: `msg to client is `, data: text };
-  }
-}
+
+
+
+
+
+
+
+
+// import { Logger } from '@nestjs/common';
+// import {
+//   OnGatewayInit,
+//   SubscribeMessage,
+//   WebSocketGateway,
+//   WsResponse,
+// } from '@nestjs/websockets';
+// import { Socket } from 'socket.io';
+
+// @WebSocketGateway()
+// export class WebsocketGateway implements OnGatewayInit {
+//   private logger: Logger = new Logger(' Socketalistasiti');
+//   afterInit(server: any) {
+//     this.logger.log('inaliziazed');
+//   }
+
+//   handleDisconnect(client: Socket) {
+//     this.logger.log(
+//       'web socket gheyre connect mibashad lotgfan ba osdoem admin tamas hasel farmaiid',
+//       client.id,
+//     );
+//   }
+//   handleConnection(client: Socket, ...args: any[]) {
+//     this.logger.log('client connected', client.id);
+//     console.log(client)
+//   }
+
+//   @SubscribeMessage('message')
+//   handleMessage(client: Socket, text: string): WsResponse<string> {
+//        this.logger.log('client connected', text);
+//  // client.emit('message', text)
+//     return { event: `msg to client is `, data: text };
+//   }
+// }
 
 // // src/websocket/websocket.gateway.ts
 

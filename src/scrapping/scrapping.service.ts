@@ -1,9 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import puppeteer, { Browser, Page } from 'puppeteer-core';
+ import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class ScrappingService {
+ 
   private browser: Browser | null = null;
+  private translationResultSubject = new Subject<String | null>();
+
+  getTranslationResultObservable(): Observable<String | null> {
+    return this.translationResultSubject.asObservable();
+  }
 
   async transcrapper(text: string): Promise<string | null> {
     if (!this.browser) {
@@ -29,8 +36,8 @@ export class ScrappingService {
     const consequentText: any = await consequentElement?.evaluate(
       (el) => el.textContent,
     );
-    console.log(consequentText);
+    this.translationResultSubject.next(consequentText);
 
-    return typeof (consequentText === String) ? consequentText : '';
+    return typeof consequentText === 'string' ? consequentText : '';
   }
 }
