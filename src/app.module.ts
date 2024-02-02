@@ -12,7 +12,7 @@ import { ScrappingService } from './scrapping/scrapping.service';
            envFilePath: '.env',
            isGlobal: true,
          }),
-         MongooseModule.forRoot(process.env.MONGODB_URI),
+        //  MongooseModule.forRoot(process.env.MONGODB_URI),
          TranslatorModule,
        ],
        controllers: [AppController],

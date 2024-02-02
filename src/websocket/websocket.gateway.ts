@@ -7,9 +7,13 @@ import {
 import { Server, Socket } from 'socket.io';
 import { ScrappingService } from '../scrapping/scrapping.service';
 import { Logger } from '@nestjs/common';
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: ['http://localhost:3000'],
+  },
+})
 export class ScrappingGateway {
-  private logger: Logger = new Logger(' Socketalistasiti');
+  private logger: Logger = new Logger('Socketalistasiti');
 
   @WebSocketServer()
   server: Server;
@@ -19,16 +23,25 @@ export class ScrappingGateway {
       'web socket gheyre connect mibashad lotgfan ba osmosadmin tamas hasel farmaiid',
       client.id,
     );
+  } 
+  
+  async handleConnection(client: Socket, ...args: any[]) {
+    try {
+      const result = await this.scrappingService.transcrapper();
+  
+      // Emit the 'translationResult' event to the connected client
+      client.emit('translationResult', result);
+  
+      this.logger.log('Sent translation result to client:', result);
+    } catch (error) {
+      this.logger.error('Error while processing translation:', error);
   }
- async handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log('client connected', client.id);
-    const result = await this.scrappingService.transcrapper();
-    this.server.emit('translationResult', result);
-    console.log(client);
+
   }
 
   @SubscribeMessage('translateText')
   async handleTranslateText(@MessageBody() text: string): Promise<void> {
+    this.logger.log('client connected', text);
     const result = await this.scrappingService.translate(text);
     this.server.emit('translationResult', result);
   }
