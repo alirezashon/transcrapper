@@ -3,6 +3,7 @@ import {
   WebSocketServer,
   SubscribeMessage,
   MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ScrappingService } from '../scrapping/scrapping.service';
@@ -25,18 +26,17 @@ export class ScrappingGateway {
     );
   }
   async handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log('client connected', client.id);
-    const result = await this.scrappingService.transcrapper();
+     const result = await this.scrappingService.transcrapper();
     const response = this.server.emit('translationResult', result);
-    this.logger.log('response is ============>', response);
-    console.log(client);
-  }
+    }
 
   @SubscribeMessage('translateText')
-  async handleTranslateText(@MessageBody() text: string): Promise<void> {
+  async handleTranslateText(@MessageBody() text: string , @ConnectedSocket() client:Socket): Promise<void> {
     this.logger.log('client connected', text);
     const result = await this.scrappingService.translate(text);
     this.server.emit('translationResult', result);
+    const ali = client.broadcast.emit('translateText', result);
+  this.logger.log(ali)
   }
 
   constructor(private readonly scrappingService: ScrappingService) {}
