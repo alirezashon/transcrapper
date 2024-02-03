@@ -23,20 +23,13 @@ export class ScrappingGateway {
       'web socket gheyre connect mibashad lotgfan ba osmosadmin tamas hasel farmaiid',
       client.id,
     );
-  } 
-  
-  async handleConnection(client: Socket, ...args: any[]) {
-    try {
-      const result = await this.scrappingService.transcrapper();
-  
-      // Emit the 'translationResult' event to the connected client
-      client.emit('translationResult', result);
-  
-      this.logger.log('Sent translation result to client:', result);
-    } catch (error) {
-      this.logger.error('Error while processing translation:', error);
   }
-
+  async handleConnection(client: Socket, ...args: any[]) {
+    this.logger.log('client connected', client.id);
+    const result = await this.scrappingService.transcrapper();
+    const response = this.server.emit('translationResult', result);
+    this.logger.log('response is ============>', response);
+    console.log(client);
   }
 
   @SubscribeMessage('translateText')
