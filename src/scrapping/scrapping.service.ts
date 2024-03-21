@@ -26,17 +26,17 @@ export class ScrappingService {
       // await this.page.goto('https://abadis.ir/translator/');
     }
     await this.page.waitForSelector('div[class="QS5gu sy4vM"]');
+    
     await Promise.resolve(setTimeout(() => {}, 1111));
-
     await this.page.click('div[class="QS5gu sy4vM"]');
 
-    await this.page.waitForSelector('div[class="hhB0V"]');
-    await this.page.click('div[class="hhB0V"]');
-    await Promise.resolve(setTimeout(() => {}, 222));
+    // await this.page.waitForSelector('div[class="hhB0V"]')
+    // await this.page.click('div[class="hhB0V"]');
+    // await Promise.resolve(setTimeout(() => {}, 222));
 
+    // // await this.page.click('div[class="DQEUec z1asCe K1bG5d"]');
+    // await this.page.waitForSelector('div[class="DQEUec z1asCe K1bG5d"]');
     // await this.page.click('div[class="DQEUec z1asCe K1bG5d"]');
-    await this.page.waitForSelector('div[class="DQEUec z1asCe K1bG5d"]');
-    await this.page.click('div[class="DQEUec z1asCe K1bG5d"]');
   }
   async translate(text: string): Promise<void> {
     const textarea = 'textarea[id="tw-source-text-ta"]';
